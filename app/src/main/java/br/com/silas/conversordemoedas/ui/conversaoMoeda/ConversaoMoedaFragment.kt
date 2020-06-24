@@ -9,15 +9,18 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import br.com.silas.conversordemoedas.R
 import br.com.silas.conversordemoedas.ui.listagemMoeda.ListagemMoedaFragment
 import br.com.silas.conversordemoedas.viewmodel.ConversaoMoedaViewModel
+import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
 
 class ConversaoMoedaFragment : Fragment() {
 
     private lateinit var conversaoMoedaViewModel: ConversaoMoedaViewModel
+    private lateinit var listagemMoedaViewModel: ListagemMoedaViewModel
 
     private lateinit var btnDe: Button
     private lateinit var btnPara: Button
@@ -54,24 +57,28 @@ class ConversaoMoedaFragment : Fragment() {
     }
 
     private fun bindEventsProperties() {
-        btnDe.setOnClickListener {
-            activity?.let {
-                ListagemMoedaFragment.newInstance().show(it.supportFragmentManager, this.tag)
-            }
-        }
-
-        btnPara.setOnClickListener {
-            activity?.let {
-                ListagemMoedaFragment.newInstance().show(it.supportFragmentManager, this.tag)
-            }
-        }
+        btnDe.setOnClickListener { iniciaBottomSheetListaDeMoeda() }
+        btnPara.setOnClickListener { iniciaBottomSheetListaDeMoeda() }
     }
 
     private fun bindViewModel() {
         conversaoMoedaViewModel = ViewModelProviders.of(this).get(ConversaoMoedaViewModel::class.java)
+        listagemMoedaViewModel = ViewModelProviders.of(this).get(ListagemMoedaViewModel::class.java)
     }
 
     private fun bindObservable() {
+        listagemMoedaViewModel.moedaEscolhidaDe.observe(viewLifecycleOwner, Observer {
 
+        })
+
+        listagemMoedaViewModel.moedaEscolhidaPara.observe(viewLifecycleOwner, Observer {
+
+        })
+    }
+
+    private fun iniciaBottomSheetListaDeMoeda() {
+        activity?.let {
+            ListagemMoedaFragment.newInstance().show(it.supportFragmentManager, this.tag)
+        }
     }
 }

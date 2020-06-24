@@ -1,0 +1,13 @@
+package br.com.silas.conversordemoedas.api
+
+import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.utils.Constants.KEY_ACCESS
+import kotlinx.coroutines.Deferred
+import retrofit2.http.GET
+import retrofit2.http.Query
+
+interface Api {
+
+    @GET("/list")
+    fun getMoedas(@Query("access_key") accessKey: String = KEY_ACCESS): Deferred<Moeda>
+}

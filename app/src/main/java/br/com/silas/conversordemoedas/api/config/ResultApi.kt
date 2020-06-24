@@ -1,4 +1,4 @@
-package br.com.silas.conversordemoedas.api
+package br.com.silas.conversordemoedas.api.config
 
 class ResultApi<SucessModel> {
 
@@ -19,7 +19,11 @@ class ResultApi<SucessModel> {
     fun isSucess() = value != null
 
     companion object {
-        fun <SucessModel> createSucess(value: SucessModel) = ResultApi(value)
-        fun <SucessModel> createError(error: Throwable) = ResultApi<SucessModel>(error)
+        fun <SucessModel> createSucess(value: SucessModel) =
+            ResultApi(value)
+        fun <SucessModel> createError(error: Throwable) =
+            ResultApi<SucessModel>(
+                error
+            )
     }
 }

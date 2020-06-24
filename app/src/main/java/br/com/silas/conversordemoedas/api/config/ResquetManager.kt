@@ -1,6 +1,5 @@
 package br.com.silas.conversordemoedas.api.config
 
-import br.com.silas.conversordemoedas.api.ResultApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
