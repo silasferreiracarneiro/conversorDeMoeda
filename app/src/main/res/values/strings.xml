@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ConversorDeMoedas</string>
+    <string name="conversao_de_moeda">Conversão de moeda</string>
+    <string name="listagem_de_moeda">Listagem de moeda</string>
+</resources>

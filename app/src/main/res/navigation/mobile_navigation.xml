@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mobile_navigation"
+    app:startDestination="@+id/icone_convesao_moeda">
+
+    <fragment
+        android:id="@+id/icone_convesao_moeda"
+        android:name="br.com.silas.conversordemoedas.ui.conversaoMoeda.ConversaoMoedaFragment"
+        android:label="@string/conversao_de_moeda"
+        tools:layout="@layout/fragment_convesao_moeda" />
+
+    <dialog
+        android:id="@+id/icone_listagem_moeda"
+        android:name="br.com.silas.conversordemoedas.ui.listagemMoeda.ListagemMoedaFragment"
+        android:label="@string/listagem_de_moeda"
+        tools:layout="@layout/fragment_coin_list" />
+</navigation>
