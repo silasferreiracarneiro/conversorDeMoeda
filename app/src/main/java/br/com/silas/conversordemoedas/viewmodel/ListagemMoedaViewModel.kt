@@ -3,16 +3,25 @@ package br.com.silas.conversordemoedas.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import br.com.silas.conversordemoedas.api.config.ResultApi
+import br.com.silas.conversordemoedas.api.model.MoedaResponse
 import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.provider.providerListagemMoedaUseCase
 import br.com.silas.conversordemoedas.usecase.ListagemMoedaUseCase
+import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaEvent
+import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ListagemMoedaViewModel(val usecase: ListagemMoedaUseCase = providerListagemMoedaUseCase()) : ViewModel() {
 
+    private var event = MutableLiveData<ListagemMoedaEvent>()
+    private var state = MutableLiveData<ListagemMoedaState>()
+
     var moedaEscolhidaDe = MutableLiveData<Moeda>()
     var moedaEscolhidaPara = MutableLiveData<Moeda>()
+
+    var viewEvent = event
+    var viewState = state
 
     fun getMoedas() {
         GlobalScope.launch {
@@ -23,10 +32,14 @@ class ListagemMoedaViewModel(val usecase: ListagemMoedaUseCase = providerListage
         }
     }
 
-    private fun afterCall(moedas: ResultApi<Moeda>) {
+    private fun afterCall(moedas: ResultApi<MoedaResponse>) {
         when(moedas.isSucess()) {
-            true -> null
-            false -> null
+            true -> state.postValue(ListagemMoedaState.SucessCallApi(moedas.value))
+            false -> state.postValue(ListagemMoedaState.ErrorCallApi(moedas.error))
         }
+    }
+
+    fun setMoedaSelecionada(moeda: Moeda) {
+        this.moedaEscolhidaDe.postValue(moeda)
     }
 }
