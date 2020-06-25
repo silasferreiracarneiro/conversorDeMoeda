@@ -18,6 +18,7 @@ import br.com.silas.conversordemoedas.adapter.ListaMoedaAdapter
 import br.com.silas.conversordemoedas.api.model.MoedaResponse
 import br.com.silas.conversordemoedas.api.model.converteMapParaListaDeMoeda
 import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.utils.Constants.QUEM_CONVERTE
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener.OnItemClickListener
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
@@ -29,13 +30,18 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 class ListagemMoedaFragment : BottomSheetDialogFragment() {
 
     companion object {
-        fun newInstance() = ListagemMoedaFragment()
+        fun newInstance(converter: Int) = ListagemMoedaFragment().apply {
+            val bundle = Bundle()
+            bundle.putInt(QUEM_CONVERTE, converter)
+            this.arguments = bundle
+        }
     }
 
     private lateinit var listagemMoedaViewModel: ListagemMoedaViewModel
 
     private lateinit var recycler: RecyclerView
 
+    private var quemConverte: Int = 0
     private var moedas = listOf<Moeda>()
 
     override fun onCreateView(
@@ -51,9 +57,16 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         bindViewModel()
         bindObservable()
         bindEventsProperties()
+        bindBundle()
         listagemMoedaViewModel.getMoedas()
 
         return root
+    }
+
+    private fun bindBundle() {
+        this.arguments?.getInt(QUEM_CONVERTE)?.let {
+             quemConverte = it
+        }
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
@@ -61,7 +74,7 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         bottomSheetDialog.setOnShowListener { dialog: DialogInterface ->
             val dialogc = dialog as BottomSheetDialog
             val bottomSheet = dialogc.findViewById<FrameLayout>(R.id.design_bottom_sheet)
-            val bottomSheetBehavior= BottomSheetBehavior.from(bottomSheet)
+            val bottomSheetBehavior= BottomSheetBehavior.from(bottomSheet as View)
             bottomSheetBehavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels
             bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
         }
@@ -73,7 +86,7 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
             object : OnItemClickListener {
                 override fun onItemClick(view: View?, position: Int) {
                     val moeda = moedas[position]
-                    listagemMoedaViewModel.setMoedaSelecionada(moeda)
+                    listagemMoedaViewModel.setMoedaSelecionada(moeda, quemConverte)
                     dismiss()
                 }
 

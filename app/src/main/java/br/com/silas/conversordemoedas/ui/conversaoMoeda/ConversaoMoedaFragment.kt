@@ -11,9 +11,10 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
 import br.com.silas.conversordemoedas.R
 import br.com.silas.conversordemoedas.ui.listagemMoeda.ListagemMoedaFragment
+import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
+import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
 import br.com.silas.conversordemoedas.viewmodel.ConversaoMoedaViewModel
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
 
@@ -57,8 +58,8 @@ class ConversaoMoedaFragment : Fragment() {
     }
 
     private fun bindEventsProperties() {
-        btnDe.setOnClickListener { iniciaBottomSheetListaDeMoeda() }
-        btnPara.setOnClickListener { iniciaBottomSheetListaDeMoeda() }
+        btnDe.setOnClickListener { iniciaBottomSheetListaDeMoeda(CONVERTER_DE) }
+        btnPara.setOnClickListener { iniciaBottomSheetListaDeMoeda(CONVERTER_PARA) }
     }
 
     private fun bindViewModel() {
@@ -68,17 +69,17 @@ class ConversaoMoedaFragment : Fragment() {
 
     private fun bindObservable() {
         listagemMoedaViewModel.moedaEscolhidaDe.observe(viewLifecycleOwner, Observer {
-
+            btnDe.text = it.sigla
         })
 
         listagemMoedaViewModel.moedaEscolhidaPara.observe(viewLifecycleOwner, Observer {
-
+            btnPara.text = it.sigla
         })
     }
 
-    private fun iniciaBottomSheetListaDeMoeda() {
+    private fun iniciaBottomSheetListaDeMoeda(converter: Int) {
         activity?.let {
-            ListagemMoedaFragment.newInstance().show(it.supportFragmentManager, this.tag)
+            ListagemMoedaFragment.newInstance(converter).show(it.supportFragmentManager, this.tag)
         }
     }
 }

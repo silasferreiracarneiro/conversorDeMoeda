@@ -7,6 +7,8 @@ import br.com.silas.conversordemoedas.api.model.MoedaResponse
 import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.provider.providerListagemMoedaUseCase
 import br.com.silas.conversordemoedas.usecase.ListagemMoedaUseCase
+import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
+import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
 import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaEvent
 import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaState
 import kotlinx.coroutines.GlobalScope
@@ -39,7 +41,13 @@ class ListagemMoedaViewModel(val usecase: ListagemMoedaUseCase = providerListage
         }
     }
 
-    fun setMoedaSelecionada(moeda: Moeda) {
-        this.moedaEscolhidaDe.postValue(moeda)
+    fun setMoedaSelecionada(
+        moeda: Moeda,
+        quemConverte: Int
+    ) {
+        when (quemConverte) {
+            CONVERTER_DE -> this.moedaEscolhidaDe.postValue(moeda)
+            CONVERTER_PARA -> this.moedaEscolhidaPara.postValue(moeda)
+        }
     }
 }
