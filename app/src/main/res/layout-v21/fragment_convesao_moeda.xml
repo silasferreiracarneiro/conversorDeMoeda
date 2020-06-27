@@ -47,8 +47,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/btn_converter_de"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/btn_converter_de"
-        android:contentDescription="@string/texto_inverter" />
+        app:layout_constraintTop_toTopOf="@+id/btn_converter_de" />
 
     <Button
         android:id="@+id/btn_converter_para"

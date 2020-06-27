@@ -2,4 +2,15 @@
     <string name="app_name">ConversorDeMoedas</string>
     <string name="conversao_de_moeda">Conversão de moeda</string>
     <string name="listagem_de_moeda">Listagem de moeda</string>
+
+    <string name="on_line">On-line</string>
+    <string name="off_line">Off-line</string>
+
+    <string name="error_dafault">Opss, algo deu errado! \n tente novamente mais tarde!</string>
+    <string name="texto_converter">Converter</string>
+    <string name="texto_inverter">Inverter</string>
+    <string name="zerado">0,00</string>
+    <string name="pipe">|</string>
+    <string name="n_a">N/A</string>
+    <string name="vazio"> </string>
 </resources>

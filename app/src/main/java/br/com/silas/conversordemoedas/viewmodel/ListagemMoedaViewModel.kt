@@ -9,20 +9,17 @@ import br.com.silas.conversordemoedas.provider.providerListagemMoedaUseCase
 import br.com.silas.conversordemoedas.usecase.ListagemMoedaUseCase
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
-import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaEvent
 import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 class ListagemMoedaViewModel(val usecase: ListagemMoedaUseCase = providerListagemMoedaUseCase()) : ViewModel() {
 
-    private var event = MutableLiveData<ListagemMoedaEvent>()
     private var state = MutableLiveData<ListagemMoedaState>()
 
-    var moedaEscolhidaDe = MutableLiveData<Moeda>()
-    var moedaEscolhidaPara = MutableLiveData<Moeda>()
+    var moedaEscolhidaDe = MutableLiveData<Moeda?>()
+    var moedaEscolhidaPara = MutableLiveData<Moeda?>()
 
-    var viewEvent = event
     var viewState = state
 
     fun getMoedas() {
@@ -46,8 +43,15 @@ class ListagemMoedaViewModel(val usecase: ListagemMoedaUseCase = providerListage
         quemConverte: Int
     ) {
         when (quemConverte) {
-            CONVERTER_DE -> this.moedaEscolhidaDe.postValue(moeda)
-            CONVERTER_PARA -> this.moedaEscolhidaPara.postValue(moeda)
+            CONVERTER_DE -> moedaEscolhidaDe.postValue(moeda)
+            CONVERTER_PARA -> moedaEscolhidaPara.postValue(moeda)
         }
+    }
+
+    fun inverteValoresDoBotao() {
+        val moedaDe = moedaEscolhidaDe
+        val moedaPara = moedaEscolhidaPara
+        moedaEscolhidaDe.postValue(moedaPara.value)
+        moedaEscolhidaPara.postValue(moedaDe.value)
     }
 }

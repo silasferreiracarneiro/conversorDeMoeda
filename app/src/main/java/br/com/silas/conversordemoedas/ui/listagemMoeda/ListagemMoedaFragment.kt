@@ -1,14 +1,17 @@
 package br.com.silas.conversordemoedas.ui.listagemMoeda
 
+import android.app.Activity
 import android.app.Dialog
-import android.content.DialogInterface
-import android.content.res.Resources
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.ProgressBar
+import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -21,6 +24,7 @@ import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.utils.Constants.QUEM_CONVERTE
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener.OnItemClickListener
+import br.com.silas.conversordemoedas.view.ErrorPage
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
 import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,8 +41,11 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         }
     }
 
-    private lateinit var listagemMoedaViewModel: ListagemMoedaViewModel
+    private val listagemMoedaViewModel by activityViewModels<ListagemMoedaViewModel>()
 
+    private lateinit var containerError: ErrorPage
+    private lateinit var progressBar: ProgressBar
+    private lateinit var containerRecycler: NestedScrollView
     private lateinit var recycler: RecyclerView
 
     private var quemConverte: Int = 0
@@ -54,7 +61,6 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogTheme)
 
         bindProperties(root)
-        bindViewModel()
         bindObservable()
         bindEventsProperties()
         bindBundle()
@@ -69,17 +75,40 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         }
     }
 
-    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val bottomSheetDialog = super.onCreateDialog(savedInstanceState) as BottomSheetDialog
-        bottomSheetDialog.setOnShowListener { dialog: DialogInterface ->
-            val dialogc = dialog as BottomSheetDialog
-            val bottomSheet = dialogc.findViewById<FrameLayout>(R.id.design_bottom_sheet)
-            val bottomSheetBehavior= BottomSheetBehavior.from(bottomSheet as View)
-            bottomSheetBehavior.peekHeight = Resources.getSystem().displayMetrics.heightPixels
-            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED)
-        }
-        return bottomSheetDialog
+    private fun bindProperties(root: View) {
+        this.recycler = root.findViewById(R.id.recycler_moedas)
+        this.progressBar = root.findViewById(R.id.progressBar)
+        this.containerRecycler = root.findViewById(R.id.container_recycler)
     }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        dialog.setOnShowListener { dialogInterface ->
+            val bottomSheetDialog = dialogInterface as BottomSheetDialog
+            setupFullHeight(bottomSheetDialog)
+        }
+        return dialog
+    }
+
+    private fun setupFullHeight(bottomSheetDialog: BottomSheetDialog) {
+        val bottomSheet = bottomSheetDialog.findViewById<View>(R.id.design_bottom_sheet) as FrameLayout?
+        val behavior: BottomSheetBehavior<*> = BottomSheetBehavior.from(bottomSheet as FrameLayout)
+        val layoutParams = bottomSheet.layoutParams
+        val windowHeight = getWindowHeight()
+        if (layoutParams != null) {
+            layoutParams.height = windowHeight
+        }
+        bottomSheet.layoutParams = layoutParams
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+    }
+
+    private fun getWindowHeight(): Int {
+        val displayMetrics = DisplayMetrics()
+        (context as Activity?)?.windowManager?.defaultDisplay
+            ?.getMetrics(displayMetrics)
+        return displayMetrics.heightPixels
+    }
+
     private fun bindEventsProperties() {
         recycler.addOnItemTouchListener(RecyclerViewItemClickListener(context,
             recycler,
@@ -97,10 +126,6 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
     }
 
     private fun bindObservable() {
-        this.listagemMoedaViewModel.viewEvent.observe(this, Observer {
-
-        })
-
         this.listagemMoedaViewModel.viewState.observe(this, Observer {
             when(it) {
                 is ListagemMoedaState.SucessCallApi -> sucessoNaChamada(it.value)
@@ -110,22 +135,26 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
     }
 
     private fun trataErroNaChamada(error: Throwable?) {
-
+        goneProgress()
+        containerError.visibility = View.VISIBLE
+        containerError.setMensagemErro(error?.localizedMessage ?: getString(R.string.error_dafault))
     }
 
     private fun sucessoNaChamada(moedas: MoedaResponse?) {
         moedas?.converteMapParaListaDeMoeda()?.let { it ->
             this.moedas = it
+            goneProgress()
+            mostraRecylcer()
             setListMoedas()
         }
     }
 
-    private fun bindProperties(root: View) {
-        this.recycler = root.findViewById(R.id.recycler_moedas)
+    private fun goneProgress() {
+        this.progressBar.visibility = View.GONE
     }
 
-    private fun bindViewModel() {
-        listagemMoedaViewModel = ViewModelProviders.of(this).get(ListagemMoedaViewModel::class.java)
+    private fun mostraRecylcer() {
+        this.containerRecycler.visibility = View.VISIBLE
     }
 
      private fun setListMoedas() {
