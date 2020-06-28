@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import br.com.silas.conversordemoedas.R
-import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.data.network.model.Moeda
 
 class ListaMoedaAdapter(private val moedas: List<Moeda>): RecyclerView.Adapter<ListaMoedaAdapter.ListaMoedaViewHolder>() {
 

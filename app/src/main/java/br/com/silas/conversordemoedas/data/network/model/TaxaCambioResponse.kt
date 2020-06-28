@@ -1,4 +1,4 @@
-package br.com.silas.conversordemoedas.api.model
+package br.com.silas.conversordemoedas.data.network.model
 
 import com.google.gson.annotations.SerializedName
 
@@ -15,6 +15,11 @@ class TaxaCambioResponse (
 
 }
 
-fun TaxaCambioResponse.converteMapParaListaDeTaxaDeCambio() {
-
+fun TaxaCambioResponse.converteMapParaListaDeTaxaDeCambio(): List<TaxaCambio> {
+    return currencies.map {
+        TaxaCambio(
+            it.key,
+            it.value
+        )
+    }
 }

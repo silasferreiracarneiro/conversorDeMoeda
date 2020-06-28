@@ -1,6 +1,6 @@
 package br.com.silas.conversordemoedas.provider
 
-import br.com.silas.conversordemoedas.api.Api
-import br.com.silas.conversordemoedas.api.config.RetrofitConfig
+import br.com.silas.conversordemoedas.data.network.Api
+import br.com.silas.conversordemoedas.data.network.config.RetrofitConfig
 
 fun providerApi(): Api = RetrofitConfig().api

@@ -2,7 +2,9 @@ package br.com.silas.conversordemoedas.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.data.network.config.ResultApi
+import br.com.silas.conversordemoedas.data.network.model.TaxaCambioResponse
+import br.com.silas.conversordemoedas.data.network.model.Moeda
 import br.com.silas.conversordemoedas.provider.providerConversaoMoedaUseCase
 import br.com.silas.conversordemoedas.usecase.ConversaoMoedaUseCase
 import br.com.silas.conversordemoedas.viewmodel.states.conversaoMoeda.ConversaoMoedaState
@@ -17,19 +19,32 @@ class ConversaoMoedaViewModel(private val usecase: ConversaoMoedaUseCase = provi
 
     var viewState = state
 
-    fun converte(sigla: String, nome: String, valor: BigDecimal) {
+    fun converte(isOnline: Boolean, sigla: String, nome: String, valor: BigDecimal) {
+        when (isOnline) {
+            true -> conversaoMoedaOnline(sigla, nome, valor)
+            false -> conversaoMoedaOffline(sigla, nome, valor)
+        }
+    }
+
+    private fun conversaoMoedaOffline(sigla: String, nome: String, valor: BigDecimal) {
         GlobalScope.launch {
-            val result = usecase.converteMoeda(sigla, nome, valor)
-            afterCall(
+            val result = usecase.getTaxaCambioOffline()
+        }
+    }
+
+    private fun conversaoMoedaOnline(sigla: String, nome: String, valor: BigDecimal) {
+        GlobalScope.launch {
+            val result = usecase.getTaxaCambioOnline()
+            afterCallOnline(
                 result
             )
         }
     }
 
-    private fun afterCall(result: Double?) {
-        when(result){
-            null -> state.postValue(ConversaoMoedaState.ErroNaChamadaDaApi)
-            else -> state.postValue(ConversaoMoedaState.SucessoNaChamadaDaApi(result = 0.0))
+    private fun afterCallOnline(result: ResultApi<TaxaCambioResponse>) {
+        when(result.isSucess()){
+            false -> state.postValue(ConversaoMoedaState.ErroNaChamadaDaApi)
+            else -> state.postValue(ConversaoMoedaState.SucessoNaChamadaDaApi(result = usecase.getConversaoCambio()))
         }
     }
 

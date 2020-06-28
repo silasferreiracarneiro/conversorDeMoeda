@@ -2,9 +2,9 @@ package br.com.silas.conversordemoedas.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import br.com.silas.conversordemoedas.api.config.ResultApi
-import br.com.silas.conversordemoedas.api.model.MoedaResponse
-import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.data.network.config.ResultApi
+import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
+import br.com.silas.conversordemoedas.data.network.model.Moeda
 import br.com.silas.conversordemoedas.provider.providerListagemMoedaUseCase
 import br.com.silas.conversordemoedas.usecase.ListagemMoedaUseCase
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE

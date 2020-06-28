@@ -1,4 +1,4 @@
-package br.com.silas.conversordemoedas.api.config
+package br.com.silas.conversordemoedas.data.network.config
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

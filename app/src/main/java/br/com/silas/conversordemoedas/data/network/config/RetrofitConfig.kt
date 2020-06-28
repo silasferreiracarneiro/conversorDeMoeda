@@ -1,6 +1,6 @@
-package br.com.silas.conversordemoedas.api.config
+package br.com.silas.conversordemoedas.data.network.config
 
-import br.com.silas.conversordemoedas.api.Api
+import br.com.silas.conversordemoedas.data.network.Api
 import br.com.silas.conversordemoedas.utils.Constants.BASE_URL
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import okhttp3.OkHttpClient

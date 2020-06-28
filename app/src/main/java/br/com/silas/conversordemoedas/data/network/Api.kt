@@ -1,7 +1,7 @@
-package br.com.silas.conversordemoedas.api
+package br.com.silas.conversordemoedas.data.network
 
-import br.com.silas.conversordemoedas.api.model.MoedaResponse
-import br.com.silas.conversordemoedas.api.model.TaxaCambioResponse
+import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
+import br.com.silas.conversordemoedas.data.network.model.TaxaCambioResponse
 import br.com.silas.conversordemoedas.utils.Constants.KEY_ACCESS
 import kotlinx.coroutines.Deferred
 import retrofit2.http.GET

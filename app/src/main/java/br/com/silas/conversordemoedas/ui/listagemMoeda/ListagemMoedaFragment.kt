@@ -13,14 +13,13 @@ import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.silas.conversordemoedas.R
 import br.com.silas.conversordemoedas.adapter.ListaMoedaAdapter
-import br.com.silas.conversordemoedas.api.model.MoedaResponse
-import br.com.silas.conversordemoedas.api.model.converteMapParaListaDeMoeda
-import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
+import br.com.silas.conversordemoedas.data.network.model.converteMapParaListaDeMoeda
+import br.com.silas.conversordemoedas.data.network.model.Moeda
 import br.com.silas.conversordemoedas.utils.Constants.QUEM_CONVERTE
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener.OnItemClickListener

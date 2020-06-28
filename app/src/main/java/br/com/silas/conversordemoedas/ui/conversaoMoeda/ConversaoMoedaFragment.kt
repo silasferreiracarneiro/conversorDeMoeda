@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import br.com.silas.conversordemoedas.R
-import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.data.network.model.Moeda
 import br.com.silas.conversordemoedas.ui.listagemMoeda.ListagemMoedaFragment
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
@@ -116,6 +116,7 @@ class ConversaoMoedaFragment : Fragment() {
 
     private fun efetuaAhConversaoDoValor() {
         conversaoMoedaViewModel.converte(
+            isOnline = true,
             sigla = formataString(moedaDe?.sigla),
             nome = formataString(moedaPara?.nome),
             valor = getValorEscolhido()
@@ -128,17 +129,17 @@ class ConversaoMoedaFragment : Fragment() {
 
     private fun configuraMoedaDeSelecionada(it: Moeda?) {
         moedaDe = it
-        btnDe.text = getStringSigla(it?.sigla)
-        titleDe.text = getStringSigla(it?.sigla)
+        btnDe.text = getSigla(it?.sigla)
+        titleDe.text = getSigla(it?.sigla)
         conversaoMoedaViewModel.validacaoDasMoedasSelecionadas(moedaDe, moedaPara)
     }
 
-    private fun getStringSigla(value: String?) = value?.let { it } ?: getString(R.string.n_a)
+    private fun getSigla(value: String?) = value?.let { it } ?: getString(R.string.n_a)
 
     private fun configuraMoedaParaSelecionada(it: Moeda?) {
         moedaPara = it
-        btnPara.text = getStringSigla(it?.sigla)
-        titlePara.text = getStringSigla(it?.sigla)
+        btnPara.text = getSigla(it?.sigla)
+        titlePara.text = getSigla(it?.sigla)
         conversaoMoedaViewModel.validacaoDasMoedasSelecionadas(moedaDe, moedaPara)
     }
 

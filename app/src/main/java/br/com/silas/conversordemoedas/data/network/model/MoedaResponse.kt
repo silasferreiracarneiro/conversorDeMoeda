@@ -1,6 +1,5 @@
-package br.com.silas.conversordemoedas.api.model
+package br.com.silas.conversordemoedas.data.network.model
 
-import br.com.silas.conversordemoedas.model.Moeda
 import com.google.gson.annotations.SerializedName
 
 class MoedaResponse (
