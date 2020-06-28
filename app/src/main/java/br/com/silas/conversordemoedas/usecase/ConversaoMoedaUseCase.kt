@@ -1,6 +1,6 @@
 package br.com.silas.conversordemoedas.usecase
 
-import br.com.silas.conversordemoedas.data.network.model.Moeda
+import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.repository.TaxaCambioRepository
 import java.math.BigDecimal
 

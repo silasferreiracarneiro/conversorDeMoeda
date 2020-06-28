@@ -16,6 +16,6 @@ class RetrofitConfig {
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
         .build()
 
-    var api: Api = getIntanceRetrofit().create(
+    val api: Api = getIntanceRetrofit().create(
         Api::class.java)
 }

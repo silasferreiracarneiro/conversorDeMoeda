@@ -19,7 +19,7 @@ import br.com.silas.conversordemoedas.R
 import br.com.silas.conversordemoedas.adapter.ListaMoedaAdapter
 import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
 import br.com.silas.conversordemoedas.data.network.model.converteMapParaListaDeMoeda
-import br.com.silas.conversordemoedas.data.network.model.Moeda
+import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.utils.Constants.QUEM_CONVERTE
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener
 import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener.OnItemClickListener

@@ -1,8 +1,7 @@
 package br.com.silas.conversordemoedas.data.db
 
 import androidx.room.*
-import br.com.silas.conversordemoedas.data.network.model.TaxaCambio
-import kotlinx.coroutines.Deferred
+import br.com.silas.conversordemoedas.model.TaxaCambio
 
 @Dao
 interface DatabaseDao {

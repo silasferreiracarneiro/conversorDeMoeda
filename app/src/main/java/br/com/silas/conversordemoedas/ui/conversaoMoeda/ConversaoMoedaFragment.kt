@@ -9,22 +9,27 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import br.com.silas.conversordemoedas.R
-import br.com.silas.conversordemoedas.data.network.model.Moeda
+import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.ui.listagemMoeda.ListagemMoedaFragment
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
 import br.com.silas.conversordemoedas.viewmodel.ConversaoMoedaViewModel
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
+import br.com.silas.conversordemoedas.viewmodel.ViewModelFactory
 import br.com.silas.conversordemoedas.viewmodel.states.conversaoMoeda.ConversaoMoedaState
 import java.math.BigDecimal
+import javax.inject.Inject
 
 class ConversaoMoedaFragment : Fragment() {
 
-    private val conversaoMoedaViewModel by activityViewModels<ConversaoMoedaViewModel>()
-    private val listagemMoedaViewModel by activityViewModels<ListagemMoedaViewModel>()
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private lateinit var conversaoMoedaViewModel: ConversaoMoedaViewModel
+    private lateinit var listagemMoedaViewModel: ListagemMoedaViewModel
 
     private lateinit var btnDe: Button
     private lateinit var btnPara: Button
@@ -47,11 +52,17 @@ class ConversaoMoedaFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_convesao_moeda, container, false)
 
         bindProperties(root)
+        bindViewModel()
         bindEventsProperties()
         bindObservable()
         bindEventsProperties()
 
         return root
+    }
+
+    private fun bindViewModel() {
+        conversaoMoedaViewModel = ViewModelProviders.of(this, viewModelFactory).get(ConversaoMoedaViewModel::class.java)
+        listagemMoedaViewModel = ViewModelProviders.of(this, viewModelFactory).get(ListagemMoedaViewModel::class.java)
     }
 
     private fun bindProperties(view: View) {

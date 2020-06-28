@@ -1,4 +1,4 @@
-package br.com.silas.conversordemoedas.data.network.model
+package br.com.silas.conversordemoedas.model
 
 class Moeda(
     var sigla: String,
