@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryDark"
+    android:id="@+id/coordinatorLayout"
     tools:context=".ui.listagemMoeda.ListagemMoedaFragment">
 
     <ProgressBar
@@ -17,11 +18,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <br.com.silas.conversordemoedas.view.ErrorPage
-        android:layout_height="match_parent"
-        android:layout_width="match_parent"
-        android:visibility="gone" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/container_recycler"

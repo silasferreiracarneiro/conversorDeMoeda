@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.activityViewModels
@@ -21,16 +22,14 @@ import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
 import br.com.silas.conversordemoedas.data.network.model.converteMapParaListaDeMoeda
 import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.utils.Constants.QUEM_CONVERTE
-import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener
-import br.com.silas.conversordemoedas.utils.RecyclerViewItemClickListener.OnItemClickListener
-import br.com.silas.conversordemoedas.view.ErrorPage
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
 import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaState
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.material.snackbar.Snackbar
 
-class ListagemMoedaFragment : BottomSheetDialogFragment() {
+class ListagemMoedaFragment : BottomSheetDialogFragment(), MoedaSelecionada {
 
     companion object {
         fun newInstance(converter: Int) = ListagemMoedaFragment().apply {
@@ -42,13 +41,12 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
 
     private val listagemMoedaViewModel by activityViewModels<ListagemMoedaViewModel>()
 
-    private lateinit var containerError: ErrorPage
     private lateinit var progressBar: ProgressBar
     private lateinit var containerRecycler: NestedScrollView
     private lateinit var recycler: RecyclerView
+    private lateinit var coordinatorLayout: ConstraintLayout
 
     private var quemConverte: Int = 0
-    private var moedas = listOf<Moeda>()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -61,7 +59,6 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
 
         bindProperties(root)
         bindObservable()
-        bindEventsProperties()
         bindBundle()
         listagemMoedaViewModel.getMoedas()
 
@@ -108,22 +105,6 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         return displayMetrics.heightPixels
     }
 
-    private fun bindEventsProperties() {
-        recycler.addOnItemTouchListener(RecyclerViewItemClickListener(context,
-            recycler,
-            object : OnItemClickListener {
-                override fun onItemClick(view: View?, position: Int) {
-                    val moeda = moedas[position]
-                    listagemMoedaViewModel.setMoedaSelecionada(moeda, quemConverte)
-                    dismiss()
-                }
-
-                override fun onItemLongClick(view: View?, position: Int) {
-                    //Não é necessario
-                }
-            }))
-    }
-
     private fun bindObservable() {
         this.listagemMoedaViewModel.viewState.observe(this, Observer {
             when(it) {
@@ -135,16 +116,15 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
 
     private fun trataErroNaChamada(error: Throwable?) {
         goneProgress()
-        containerError.visibility = View.VISIBLE
-        containerError.setMensagemErro(error?.localizedMessage ?: getString(R.string.error_dafault))
+        Snackbar.make(coordinatorLayout, error?.localizedMessage ?: getString(R.string.error_dafault), Snackbar.LENGTH_LONG).show()
+        this.dismiss()
     }
 
     private fun sucessoNaChamada(moedas: MoedaResponse?) {
         moedas?.converteMapParaListaDeMoeda()?.let { it ->
-            this.moedas = it
             goneProgress()
             mostraRecylcer()
-            setListMoedas()
+            setListMoedas(it)
         }
     }
 
@@ -156,11 +136,20 @@ class ListagemMoedaFragment : BottomSheetDialogFragment() {
         this.containerRecycler.visibility = View.VISIBLE
     }
 
-     private fun setListMoedas() {
+     private fun setListMoedas(moedas: List<Moeda>) {
          recycler.setHasFixedSize(true)
          recycler.layoutManager = LinearLayoutManager(activity)
          recycler.isNestedScrollingEnabled = false
-         recycler.adapter = ListaMoedaAdapter(moedas)
+         recycler.adapter = ListaMoedaAdapter(moedas, this)
          ((recycler.adapter as ListaMoedaAdapter).notifyDataSetChanged())
     }
+
+    override fun clickItem(moeda: Moeda) {
+        listagemMoedaViewModel.setMoedaSelecionada(moeda, quemConverte)
+        dismiss()
+    }
+}
+
+interface MoedaSelecionada {
+    fun clickItem(moeda: Moeda)
 }

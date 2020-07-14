@@ -1,13 +1,13 @@
 package br.com.silas.conversordemoedas.repository
 
+import br.com.silas.conversordemoedas.data.db.DatabaseDao
 import br.com.silas.conversordemoedas.data.network.Api
 import br.com.silas.conversordemoedas.data.network.config.ResultApi
-import br.com.silas.conversordemoedas.data.network.config.RetrofitConfig
 import br.com.silas.conversordemoedas.data.network.config.doResquest
 import br.com.silas.conversordemoedas.model.TaxaCambio
 import br.com.silas.conversordemoedas.data.network.model.TaxaCambioResponse
 
-class TaxaCambioRepository(private val api: Api = RetrofitConfig().api) {
+class TaxaCambioRepository(private val api: Api, private val database: DatabaseDao) {
 
     suspend fun obterTaxaDeCambioOnline() : ResultApi<TaxaCambioResponse> =
         doResquest {

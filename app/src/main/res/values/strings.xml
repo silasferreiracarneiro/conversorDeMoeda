@@ -13,4 +13,5 @@
     <string name="pipe">|</string>
     <string name="n_a">N/A</string>
     <string name="vazio"> </string>
+    <string name="erro_verifique_valor_digitado">Favor verifique o valor digitado!</string>
 </resources>

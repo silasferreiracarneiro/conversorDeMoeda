@@ -1,19 +1,21 @@
 package br.com.silas.conversordemoedas.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import br.com.silas.conversordemoedas.data.network.config.ResultApi
 import br.com.silas.conversordemoedas.data.network.model.TaxaCambioResponse
 import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.provider.providerTaxaCambioUsecase
 import br.com.silas.conversordemoedas.usecase.ConversaoMoedaUseCase
 import br.com.silas.conversordemoedas.viewmodel.states.conversaoMoeda.ConversaoMoedaState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
-import javax.inject.Inject
 
-class ConversaoMoedaViewModel @Inject constructor(val usecase: ConversaoMoedaUseCase)
-    : ViewModel() {
+class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val usecase: ConversaoMoedaUseCase = providerTaxaCambioUsecase(application.applicationContext)
 
     private var state = MutableLiveData<ConversaoMoedaState>()
 

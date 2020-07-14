@@ -10,7 +10,7 @@ import br.com.silas.conversordemoedas.model.TaxaCambio
 abstract class AppDatabase : RoomDatabase() {
 
     companion object {
-        private const val DATABASE_NAME = "ConversorMoedaBTG"
+        private const val DATABASE_NAME = "ConversorMoeda"
 
         @Volatile
         private var instance: AppDatabase? = null

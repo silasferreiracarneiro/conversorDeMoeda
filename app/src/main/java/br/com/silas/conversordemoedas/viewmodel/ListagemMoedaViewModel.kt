@@ -5,15 +5,16 @@ import androidx.lifecycle.ViewModel
 import br.com.silas.conversordemoedas.data.network.config.ResultApi
 import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
 import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.provider.providerListagemMoedaUsecase
 import br.com.silas.conversordemoedas.usecase.ListagemMoedaUseCase
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
 import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaState
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-class ListagemMoedaViewModel @Inject constructor(val usecase: ListagemMoedaUseCase) : ViewModel() {
+class ListagemMoedaViewModel(private val usecase: ListagemMoedaUseCase = providerListagemMoedaUsecase())
+    : ViewModel() {
 
     private var state = MutableLiveData<ListagemMoedaState>()
 

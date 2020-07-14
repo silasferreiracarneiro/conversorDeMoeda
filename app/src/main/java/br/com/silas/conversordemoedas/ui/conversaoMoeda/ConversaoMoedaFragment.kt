@@ -8,7 +8,9 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import br.com.silas.conversordemoedas.R
@@ -18,18 +20,14 @@ import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_DE
 import br.com.silas.conversordemoedas.utils.Constants.CONVERTER_PARA
 import br.com.silas.conversordemoedas.viewmodel.ConversaoMoedaViewModel
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
-import br.com.silas.conversordemoedas.viewmodel.ViewModelFactory
 import br.com.silas.conversordemoedas.viewmodel.states.conversaoMoeda.ConversaoMoedaState
+import com.google.android.material.snackbar.Snackbar
 import java.math.BigDecimal
-import javax.inject.Inject
 
 class ConversaoMoedaFragment : Fragment() {
 
-    @Inject
-    lateinit var viewModelFactory: ViewModelFactory
-
     private lateinit var conversaoMoedaViewModel: ConversaoMoedaViewModel
-    private lateinit var listagemMoedaViewModel: ListagemMoedaViewModel
+    private val listagemMoedaViewModel: ListagemMoedaViewModel by activityViewModels()
 
     private lateinit var btnDe: Button
     private lateinit var btnPara: Button
@@ -39,6 +37,7 @@ class ConversaoMoedaFragment : Fragment() {
     private lateinit var titlePara: TextView
     private lateinit var campoValor: EditText
     private lateinit var tvResultado: TextView
+    private lateinit var coordinatorLayout: ConstraintLayout
 
     private var moedaDe: Moeda? = null
     private var moedaPara: Moeda? = null
@@ -61,8 +60,7 @@ class ConversaoMoedaFragment : Fragment() {
     }
 
     private fun bindViewModel() {
-        conversaoMoedaViewModel = ViewModelProviders.of(this, viewModelFactory).get(ConversaoMoedaViewModel::class.java)
-        listagemMoedaViewModel = ViewModelProviders.of(this, viewModelFactory).get(ListagemMoedaViewModel::class.java)
+        conversaoMoedaViewModel = ViewModelProviders.of(this).get(ConversaoMoedaViewModel::class.java)
     }
 
     private fun bindProperties(view: View) {
@@ -74,6 +72,7 @@ class ConversaoMoedaFragment : Fragment() {
         titlePara = view.findViewById(R.id.text_title_para)
         campoValor = view.findViewById(R.id.edit_valor)
         tvResultado = view.findViewById(R.id.resultado_conversao)
+        coordinatorLayout = view.findViewById(R.id.coordinatorLayout)
     }
 
     private fun bindEventsProperties() {
@@ -95,7 +94,7 @@ class ConversaoMoedaFragment : Fragment() {
 
     private fun getValorEscolhido(): BigDecimal {
         return campoValor.text?.let {
-            BigDecimal(it.toString())
+            if (it.isEmpty() || it.isBlank()) BigDecimal.ZERO else BigDecimal(it.toString())
         } ?: BigDecimal.ZERO
     }
 
@@ -104,8 +103,8 @@ class ConversaoMoedaFragment : Fragment() {
             when (it) {
                 is ConversaoMoedaState.SucessoNaValidacaoDasMoedas -> habilitaBotaoConverterValor()
                 is ConversaoMoedaState.SucessoValidacaoValor -> efetuaAhConversaoDoValor()
-                is ConversaoMoedaState.ErroValidacaoValor -> null
-                is ConversaoMoedaState.ErroNaChamadaDaApi -> null
+                is ConversaoMoedaState.ErroValidacaoValor -> showErrorUser(getString(R.string.erro_verifique_valor_digitado))
+                is ConversaoMoedaState.ErroNaChamadaDaApi -> showErrorUser(null)
                 is ConversaoMoedaState.SucessoNaChamadaDaApi -> mostraResultadoDaApiParaOhUsuario(it.result)
             }
         })
@@ -117,6 +116,10 @@ class ConversaoMoedaFragment : Fragment() {
         listagemMoedaViewModel.moedaEscolhidaPara.observe(viewLifecycleOwner, Observer {
             configuraMoedaParaSelecionada(it)
         })
+    }
+
+    private fun showErrorUser(string: String?) {
+        Snackbar.make(coordinatorLayout, string ?: getString(R.string.error_dafault), Snackbar.LENGTH_LONG).show()
     }
 
     private fun mostraResultadoDaApiParaOhUsuario(valor: Double?) {
