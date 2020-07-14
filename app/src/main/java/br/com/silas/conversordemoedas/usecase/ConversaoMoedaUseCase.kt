@@ -16,5 +16,9 @@ class ConversaoMoedaUseCase(private val repository: TaxaCambioRepository) {
 
     suspend fun insertTaxaCambio(taxa: TaxaCambio) = repository.insereTaxaCambio(taxa)
 
-    fun getConversaoCambio(): Double?  = 0.0
+    fun getConversaoCambioOnline(
+        siglaDe: String,
+        siglaPara: String,
+        valor: BigDecimal
+    ): Double?  = 0.0
 }

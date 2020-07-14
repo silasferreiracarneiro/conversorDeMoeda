@@ -13,14 +13,12 @@ class TaxaCambioResponse (
     @SerializedName("currencies")
     var currencies : Map<String, Double>
 ) {
-
-}
-
-fun TaxaCambioResponse.converteMapParaListaDeTaxaDeCambio(): List<TaxaCambio> {
-    return currencies.map {
-        TaxaCambio(
-            it.key,
-            it.value
-        )
+    fun converteMapParaListaDeTaxaDeCambio(): List<TaxaCambio> {
+        return currencies.map {
+            TaxaCambio(
+                it.key,
+                it.value
+            )
+        }
     }
 }

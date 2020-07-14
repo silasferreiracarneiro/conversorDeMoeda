@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import br.com.silas.conversordemoedas.data.network.config.ResultApi
 import br.com.silas.conversordemoedas.data.network.model.TaxaCambioResponse
 import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.model.TaxaCambio
 import br.com.silas.conversordemoedas.provider.providerTaxaCambioUsecase
 import br.com.silas.conversordemoedas.usecase.ConversaoMoedaUseCase
 import br.com.silas.conversordemoedas.viewmodel.states.conversaoMoeda.ConversaoMoedaState
@@ -34,19 +35,48 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
         }
     }
 
-    private fun conversaoMoedaOnline(sigla: String, nome: String, valor: BigDecimal) {
+    private fun conversaoMoedaOnline(siglaDe: String, siglaPara: String, valor: BigDecimal) {
         GlobalScope.launch {
             val result = usecase.getTaxaCambioOnline()
             afterCallOnline(
-                result
+                result,
+                siglaDe,
+                siglaPara,
+                valor
             )
         }
     }
 
-    private fun afterCallOnline(result: ResultApi<TaxaCambioResponse>) {
+    private fun afterCallOnline(
+        result: ResultApi<TaxaCambioResponse>,
+        siglaDe: String,
+        siglaPara: String,
+        valor: BigDecimal
+    ) {
         when(result.isSucess()){
             false -> state.postValue(ConversaoMoedaState.ErroNaChamadaDaApi)
-            else -> state.postValue(ConversaoMoedaState.SucessoNaChamadaDaApi(result = usecase.getConversaoCambio()))
+            else -> sucessCallApi(result, siglaDe, siglaPara, valor)
+        }
+    }
+
+    private fun sucessCallApi(
+        result: ResultApi<TaxaCambioResponse>,
+        siglaDe: String,
+        siglaPara: String,
+        valor: BigDecimal
+    ) {
+        val result = result.value?.converteMapParaListaDeTaxaDeCambio()
+        result?.let {
+            salvaListaDeTaxas(it)
+            state.postValue(ConversaoMoedaState.SucessoNaChamadaDaApi(usecase.getConversaoCambioOnline(siglaDe, siglaPara, valor)))
+        }
+    }
+
+    private fun salvaListaDeTaxas(it: List<TaxaCambio>) {
+        it.forEach { taxa ->
+            GlobalScope.launch {
+                usecase.insertTaxaCambio(taxa)
+            }
         }
     }
 

@@ -18,8 +18,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.silas.conversordemoedas.R
 import br.com.silas.conversordemoedas.adapter.ListaMoedaAdapter
-import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
-import br.com.silas.conversordemoedas.data.network.model.converteMapParaListaDeMoeda
 import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.utils.Constants.QUEM_CONVERTE
 import br.com.silas.conversordemoedas.viewmodel.ListagemMoedaViewModel
@@ -120,8 +118,8 @@ class ListagemMoedaFragment : BottomSheetDialogFragment(), MoedaSelecionada {
         this.dismiss()
     }
 
-    private fun sucessoNaChamada(moedas: MoedaResponse?) {
-        moedas?.converteMapParaListaDeMoeda()?.let { it ->
+    private fun sucessoNaChamada(moedas: List<Moeda>?) {
+        moedas?.let { it ->
             goneProgress()
             mostraRecylcer()
             setListMoedas(it)

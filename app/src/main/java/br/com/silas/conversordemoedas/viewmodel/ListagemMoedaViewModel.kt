@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import br.com.silas.conversordemoedas.data.network.config.ResultApi
 import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
+import br.com.silas.conversordemoedas.data.network.model.converteMapParaListaDeMoeda
 import br.com.silas.conversordemoedas.model.Moeda
 import br.com.silas.conversordemoedas.provider.providerListagemMoedaUsecase
 import br.com.silas.conversordemoedas.usecase.ListagemMoedaUseCase
@@ -36,8 +37,24 @@ class ListagemMoedaViewModel(application: Application) : AndroidViewModel(applic
 
     private fun afterCall(moedas: ResultApi<MoedaResponse>) {
         when(moedas.isSucess()) {
-            true -> state.postValue(ListagemMoedaState.SucessCallApi(moedas.value))
+            true -> sucessoCallApi(moedas.value)
             false -> state.postValue(ListagemMoedaState.ErrorCallApi(moedas.error))
+        }
+    }
+
+    private fun sucessoCallApi(response: MoedaResponse?) {
+        val result = response?.converteMapParaListaDeMoeda()
+        result?.let {
+            salvaListaDeMoedas(it)
+            state.postValue(ListagemMoedaState.SucessCallApi(it))
+        }
+    }
+
+    private fun salvaListaDeMoedas(it: List<Moeda>) {
+        it.forEach { moeda ->
+            GlobalScope.launch {
+                usecase.saveMoeda(moeda)
+            }
         }
     }
 
