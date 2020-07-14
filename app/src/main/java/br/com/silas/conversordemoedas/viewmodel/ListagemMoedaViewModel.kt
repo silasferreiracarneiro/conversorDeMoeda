@@ -1,7 +1,8 @@
 package br.com.silas.conversordemoedas.viewmodel
 
+import android.app.Application
+import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import br.com.silas.conversordemoedas.data.network.config.ResultApi
 import br.com.silas.conversordemoedas.data.network.model.MoedaResponse
 import br.com.silas.conversordemoedas.model.Moeda
@@ -13,8 +14,9 @@ import br.com.silas.conversordemoedas.viewmodel.states.listaMoeda.ListagemMoedaS
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class ListagemMoedaViewModel(private val usecase: ListagemMoedaUseCase = providerListagemMoedaUsecase())
-    : ViewModel() {
+class ListagemMoedaViewModel(application: Application) : AndroidViewModel(application) {
+
+    private val usecase: ListagemMoedaUseCase = providerListagemMoedaUsecase(application.applicationContext)
 
     private var state = MutableLiveData<ListagemMoedaState>()
 

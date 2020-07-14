@@ -1,6 +1,7 @@
 package br.com.silas.conversordemoedas.usecase
 
 import br.com.silas.conversordemoedas.model.Moeda
+import br.com.silas.conversordemoedas.model.TaxaCambio
 import br.com.silas.conversordemoedas.repository.TaxaCambioRepository
 import java.math.BigDecimal
 
@@ -12,6 +13,8 @@ class ConversaoMoedaUseCase(private val repository: TaxaCambioRepository) {
     suspend fun getTaxaCambioOnline() = repository.obterTaxaDeCambioOnline()
 
     suspend fun getTaxaCambioOffline() = repository.obterTaxaDeCambioOffline()
+
+    suspend fun insertTaxaCambio(taxa: TaxaCambio) = repository.insereTaxaCambio(taxa)
 
     fun getConversaoCambio(): Double?  = 0.0
 }

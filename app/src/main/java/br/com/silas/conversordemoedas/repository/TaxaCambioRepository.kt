@@ -14,15 +14,7 @@ class TaxaCambioRepository(private val api: Api, private val database: DatabaseD
             api.getTaxaCambio().await()
         }
 
-    suspend fun obterTaxaDeCambioOffline(): ResultApi<List<TaxaCambio>>? {
-//        val dao = AppDatabase.invoke(application).apiDaoLocal()
-//        return doResquest {
-//            dao.getTaxaCambio().await()
-//        }
-        return null
-    }
+    suspend fun obterTaxaDeCambioOffline(): List<TaxaCambio> = database.getTaxaCambio()
 
-    suspend fun insereTaxaCambio() {
-
-    }
+    suspend fun insereTaxaCambio(taxa: TaxaCambio) = database.insertTaxaCambio(taxa)
 }
