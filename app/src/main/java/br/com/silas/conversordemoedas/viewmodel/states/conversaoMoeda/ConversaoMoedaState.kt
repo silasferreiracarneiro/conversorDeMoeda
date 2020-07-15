@@ -5,5 +5,5 @@ open class ConversaoMoedaState {
     object SucessoValidacaoValor : ConversaoMoedaState()
     object ErroNaChamadaDaApi: ConversaoMoedaState()
     object SucessoNaValidacaoDasMoedas: ConversaoMoedaState()
-    data class SucessoNaChamadaDaApi(val result: Double?): ConversaoMoedaState()
+    data class SucessoNaConversaoDaMoeda(val result: Double?): ConversaoMoedaState()
 }

@@ -5,6 +5,6 @@ import br.com.silas.conversordemoedas.repository.TaxaCambioRepository
 import br.com.silas.conversordemoedas.usecase.ConversaoMoedaUseCase
 
 fun providerTaxaCambioRepository(context: Context) =
-    TaxaCambioRepository(providerApi(), providerRoom(context))
+    TaxaCambioRepository(providerApi(), providerRoom(context), providerSharedPreferencesManager(context))
 
 fun providerTaxaCambioUsecase(context: Context) = ConversaoMoedaUseCase(providerTaxaCambioRepository(context))

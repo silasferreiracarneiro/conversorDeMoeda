@@ -22,17 +22,20 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
 
     var viewState = state
 
-    fun converte(isOnline: Boolean, sigla: String, nome: String, valor: BigDecimal) {
-        when (isOnline) {
-            true -> conversaoMoedaOnline(sigla, nome, valor)
-            false -> conversaoMoedaOffline(sigla, nome, valor)
+    fun converte(isOnline: Boolean, siglaDe: String, siglaPara: String, valor: BigDecimal) {
+        if (usecase.isOnline()) {
+            if(isOnline) {
+                conversaoMoedaOnline(siglaDe, siglaPara, valor)
+            } else {
+                conversaoMoedaOffline(siglaDe, siglaPara, valor)
+            }
+        } else {
+            conversaoMoedaOffline(siglaDe, siglaPara, valor)
         }
     }
 
-    private fun conversaoMoedaOffline(sigla: String, nome: String, valor: BigDecimal) {
-        GlobalScope.launch {
-            val result = usecase.getTaxaCambioOffline()
-        }
+    private fun conversaoMoedaOffline(siglaDe: String, siglaPara: String, valor: BigDecimal) {
+        usecase.conversaoMoedaOffline(siglaDe, siglaPara, valor)
     }
 
     private fun conversaoMoedaOnline(siglaDe: String, siglaPara: String, valor: BigDecimal) {
@@ -55,20 +58,26 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
     ) {
         when(result.isSucess()){
             false -> state.postValue(ConversaoMoedaState.ErroNaChamadaDaApi)
-            else -> sucessCallApi(result, siglaDe, siglaPara, valor)
+            else -> sucessCallApi(result.value, siglaDe, siglaPara, valor)
         }
     }
 
     private fun sucessCallApi(
-        result: ResultApi<TaxaCambioResponse>,
+        result: TaxaCambioResponse?,
         siglaDe: String,
         siglaPara: String,
         valor: BigDecimal
     ) {
-        val result = result.value?.converteMapParaListaDeTaxaDeCambio()
-        result?.let {
+        val lista = result?.converteMapParaListaDeTaxaDeCambio()
+        lista?.let {
             salvaListaDeTaxas(it)
-            state.postValue(ConversaoMoedaState.SucessoNaChamadaDaApi(usecase.getConversaoCambioOnline(siglaDe, siglaPara, valor)))
+            state.postValue(ConversaoMoedaState.SucessoNaConversaoDaMoeda(
+                usecase.conversaoMoedaOnline(
+                    it,
+                    siglaDe,
+                    siglaPara,
+                    valor
+                )))
         }
     }
 
@@ -89,14 +98,7 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
     }
 
     fun validaValorSelecionado(valor: BigDecimal) {
-        val validacaoValor = usecase.validaValor(valor)
-        afterValidacao(
-            validacaoValor
-        )
-    }
-
-    private fun afterValidacao(validacaoValor: Boolean) {
-        when (validacaoValor) {
+        when (usecase.validaValor(valor)) {
             false -> state.postValue(ConversaoMoedaState.SucessoValidacaoValor)
             true -> state.postValue(ConversaoMoedaState.ErroValidacaoValor)
         }

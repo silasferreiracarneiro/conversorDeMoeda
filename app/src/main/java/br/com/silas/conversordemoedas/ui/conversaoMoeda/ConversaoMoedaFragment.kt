@@ -105,7 +105,7 @@ class ConversaoMoedaFragment : Fragment() {
                 is ConversaoMoedaState.SucessoValidacaoValor -> efetuaAhConversaoDoValor()
                 is ConversaoMoedaState.ErroValidacaoValor -> showErrorUser(getString(R.string.erro_verifique_valor_digitado))
                 is ConversaoMoedaState.ErroNaChamadaDaApi -> showErrorUser(null)
-                is ConversaoMoedaState.SucessoNaChamadaDaApi -> mostraResultadoDaApiParaOhUsuario(it.result)
+                is ConversaoMoedaState.SucessoNaConversaoDaMoeda -> mostraResultadoDaApiParaOhUsuario(it.result)
             }
         })
 
@@ -131,8 +131,8 @@ class ConversaoMoedaFragment : Fragment() {
     private fun efetuaAhConversaoDoValor() {
         conversaoMoedaViewModel.converte(
             isOnline = true,
-            sigla = formataString(moedaDe?.sigla),
-            nome = formataString(moedaPara?.nome),
+            siglaDe = formataString(moedaDe?.sigla),
+            siglaPara = formataString(moedaPara?.nome),
             valor = getValorEscolhido()
         )
     }

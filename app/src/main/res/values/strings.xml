@@ -14,4 +14,8 @@
     <string name="n_a">N/A</string>
     <string name="vazio"> </string>
     <string name="erro_verifique_valor_digitado">Favor verifique o valor digitado!</string>
+    <string name="titulo_atencao">Atenção</string>
+    <string name="mensagem_uso_internet">Se deixar essa opção marcada vai usar seus planos de dados!</string>
+    <string name="confirmar">Confirmar</string>
+    <string name="cancelar">Cancelar</string>
 </resources>
