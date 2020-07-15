@@ -97,11 +97,7 @@ class ConversaoMoedaFragment : Fragment() {
         }
     }
 
-    private fun formataString(value: String?): String {
-        return value?.let {
-            it
-        } ?: getString(R.string.vazio)
-    }
+    private fun formataString(value: String?) =  value?.let { it } ?: getString(R.string.vazio)
 
     private fun getValorEscolhido(): BigDecimal {
         return campoValor.text?.let {

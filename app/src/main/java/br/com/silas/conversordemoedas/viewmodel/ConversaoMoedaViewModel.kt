@@ -23,12 +23,8 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
     var viewState = state
 
     fun converte(isOnline: Boolean, siglaDe: String, siglaPara: String, valor: BigDecimal) {
-        if (usecase.isOnline()) {
-            if(isOnline) {
-                conversaoMoedaOnline(siglaDe, siglaPara, valor)
-            } else {
-                conversaoMoedaOffline(siglaDe, siglaPara, valor)
-            }
+        if(isOnline) {
+            conversaoMoedaOnline(siglaDe, siglaPara, valor)
         } else {
             conversaoMoedaOffline(siglaDe, siglaPara, valor)
         }

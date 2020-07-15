@@ -24,14 +24,9 @@ class ConversaoMoedaUseCase(private val repository: TaxaCambioRepository) {
         siglaPara: String,
         valor: BigDecimal
     ): Double {
-        GlobalScope.launch {
-            val list = getTaxaCambioOffline()
-            efetuarCalculoDeCambio(
-                list.findLast { it.indiceTaxa == siglaDe },
-                list.findLast { it.indiceTaxa == siglaPara }
-            )
-        }
-        return 0.0
+        var lista = listOf<TaxaCambio>()
+        GlobalScope.launch { lista = getTaxaCambioOffline() }
+        return validaLista(lista, siglaDe, siglaPara, valor)
     }
 
     fun conversaoMoedaOnline(
@@ -40,10 +35,24 @@ class ConversaoMoedaUseCase(private val repository: TaxaCambioRepository) {
         siglaPara: String,
         valor: BigDecimal
     ): Double {
-        efetuarCalculoDeCambio(
-            lista.findLast { it.indiceTaxa == siglaDe },
-            lista.findLast { it.indiceTaxa == siglaPara }
+        return validaLista(
+            lista,
+            siglaDe,
+            siglaPara,
+            valor
         )
+    }
+
+    private fun validaLista(list: List<TaxaCambio>,
+                              siglaDe: String,
+                              siglaPara: String,
+                              valor: BigDecimal): Double {
+        if (list.isNotEmpty()) {
+            return efetuarCalculoDeCambio(
+                list.findLast { it.indiceTaxa == siglaDe },
+                list.findLast { it.indiceTaxa == siglaPara }
+            )
+        }
         return 0.0
     }
 
