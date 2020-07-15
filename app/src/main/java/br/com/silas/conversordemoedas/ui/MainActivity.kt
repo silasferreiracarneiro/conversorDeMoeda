@@ -1,6 +1,7 @@
 package br.com.silas.conversordemoedas.ui
 
 import android.app.AlertDialog
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -48,6 +49,7 @@ class MainActivity : AppCompatActivity() {
     private fun iniciaEventos() {
         switch.setOnCheckedChangeListener { _, isChecked ->
             viewmodel.salvaSeEhParaUsarDadosMoveis(isChecked)
+            setaValorNoSwitch(isChecked)
         }
     }
 
@@ -63,16 +65,19 @@ class MainActivity : AppCompatActivity() {
 
     private fun emiteAlertaQueVaiUsarOsDadosMoveis() {
         if (switch.isChecked) {
-            AlertDialog.Builder(this)
+            val dialog = AlertDialog.Builder(this)
                 .setCancelable(false)
                 .setTitle(getString(R.string.titulo_atencao))
                 .setMessage(getString(R.string.mensagem_uso_internet))
-                .setPositiveButton(getString(R.string.confirmar)
-                ) { p0, _ -> p0?.dismiss() }.setNegativeButton(getString(R.string.cancelar)
-                ) { p0, _ ->
+                .setPositiveButton(getString(R.string.confirmar))
+                { p0, _ -> p0?.dismiss() }
+                .setNegativeButton(getString(R.string.cancelar))
+                { p0, _ ->
                     setaValorNoSwitch(false)
                     p0?.dismiss()
                 }.show()
+            dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.BLACK)
         }
     }
 
