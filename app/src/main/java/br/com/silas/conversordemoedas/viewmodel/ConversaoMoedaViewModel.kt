@@ -22,24 +22,29 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
 
     var viewState = state
 
-    fun converte(isOnline: Boolean, siglaDe: String, siglaPara: String, valor: BigDecimal) {
-        if(isOnline) {
-            conversaoMoedaOnline(siglaDe, siglaPara, valor)
-        } else {
-            conversaoMoedaOffline(siglaDe, siglaPara, valor)
+    fun converte(siglaPara: String, valor: BigDecimal) {
+        GlobalScope.launch {
+            if(usecase.isOnline()) {
+                conversaoMoedaOnline(siglaPara, valor)
+            } else {
+                conversaoMoedaOffline(siglaPara, valor)
+            }
         }
     }
 
-    private fun conversaoMoedaOffline(siglaDe: String, siglaPara: String, valor: BigDecimal) {
-        usecase.conversaoMoedaOffline(siglaDe, siglaPara, valor)
+    private fun conversaoMoedaOffline(siglaPara: String, valor: BigDecimal) {
+        GlobalScope.launch {
+            val listaDeTaxa  = usecase.getTaxaCambioOffline()
+            val result = usecase.conversaoMoedaOffline(siglaPara, valor, listaDeTaxa)
+            state.postValue(ConversaoMoedaState.SucessoNaConversaoDaMoeda(result))
+        }
     }
 
-    private fun conversaoMoedaOnline(siglaDe: String, siglaPara: String, valor: BigDecimal) {
+    private fun conversaoMoedaOnline(siglaPara: String, valor: BigDecimal) {
         GlobalScope.launch {
             val result = usecase.getTaxaCambioOnline()
             afterCallOnline(
                 result,
-                siglaDe,
                 siglaPara,
                 valor
             )
@@ -48,19 +53,17 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
 
     private fun afterCallOnline(
         result: ResultApi<TaxaCambioResponse>,
-        siglaDe: String,
         siglaPara: String,
         valor: BigDecimal
     ) {
         when(result.isSucess()){
             false -> state.postValue(ConversaoMoedaState.ErroNaChamadaDaApi)
-            else -> sucessCallApi(result.value, siglaDe, siglaPara, valor)
+            else -> sucessCallApi(result.value, siglaPara, valor)
         }
     }
 
     private fun sucessCallApi(
         result: TaxaCambioResponse?,
-        siglaDe: String,
         siglaPara: String,
         valor: BigDecimal
     ) {
@@ -70,7 +73,6 @@ class ConversaoMoedaViewModel(application: Application) : AndroidViewModel(appli
             state.postValue(ConversaoMoedaState.SucessoNaConversaoDaMoeda(
                 usecase.conversaoMoedaOnline(
                     it,
-                    siglaDe,
                     siglaPara,
                     valor
                 )))

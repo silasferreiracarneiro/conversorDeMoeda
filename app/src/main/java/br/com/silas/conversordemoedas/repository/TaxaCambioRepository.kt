@@ -19,5 +19,5 @@ class TaxaCambioRepository(private val api: Api, private val database: DatabaseD
 
     suspend fun insereTaxaCambio(taxa: TaxaCambio) = database.insertTaxaCambio(taxa)
 
-    fun isOnline(): Boolean = prefs.getSeEhParaUsarDadosMoveis()
+    suspend fun isOnline(): Boolean = prefs.getSeEhParaUsarDadosMoveis()
 }

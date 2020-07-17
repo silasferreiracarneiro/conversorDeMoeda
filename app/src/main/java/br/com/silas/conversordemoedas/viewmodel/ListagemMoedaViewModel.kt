@@ -28,11 +28,22 @@ class ListagemMoedaViewModel(application: Application) : AndroidViewModel(applic
 
     fun getMoedas() {
         GlobalScope.launch {
-            val moedas = usecase.getMoedas()
-            afterCall(
-                moedas
-            )
+            if(usecase.isOnline()) {
+                val moedas = usecase.getMoedasOnline()
+                afterCall(
+                    moedas
+                )
+            } else {
+                val moedas = usecase.getMoedasOffline()
+                afterSearchOffiline(
+                    moedas
+                )
+            }
         }
+    }
+
+    private fun afterSearchOffiline(moedas: List<Moeda>) {
+        state.postValue(ListagemMoedaState.SucessCallApi(moedas))
     }
 
     private fun afterCall(moedas: ResultApi<MoedaResponse>) {

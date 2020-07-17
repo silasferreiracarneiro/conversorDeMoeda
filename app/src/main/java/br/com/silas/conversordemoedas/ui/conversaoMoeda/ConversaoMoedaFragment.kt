@@ -29,10 +29,7 @@ import java.math.BigDecimal
 class ConversaoMoedaFragment : Fragment() {
 
     private lateinit var conversaoMoedaViewModel: ConversaoMoedaViewModel
-    private lateinit var mainViewModel: MainViewModel
     private val listagemMoedaViewModel: ListagemMoedaViewModel by activityViewModels()
-
-    private var isOnline: Boolean = false
 
     private lateinit var btnDe: Button
     private lateinit var btnPara: Button
@@ -60,18 +57,12 @@ class ConversaoMoedaFragment : Fragment() {
         bindEventsProperties()
         bindObservable()
         bindEventsProperties()
-        buscaUltimoValorSelecionadoNoSwitch()
 
         return root
     }
 
-    private fun buscaUltimoValorSelecionadoNoSwitch() {
-        mainViewModel.buscaUltimoValorSelecionadoNoSwitch()
-    }
-
     private fun bindViewModel() {
         conversaoMoedaViewModel = ViewModelProviders.of(this).get(ConversaoMoedaViewModel::class.java)
-        mainViewModel = ViewModelProviders.of(this).get(MainViewModel::class.java)
     }
 
     private fun bindProperties(view: View) {
@@ -116,12 +107,6 @@ class ConversaoMoedaFragment : Fragment() {
             }
         })
 
-        mainViewModel.viewSate.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is MainState.SetaUltimoValorSelecionadoNoSwith -> { isOnline = it.valor }
-            }
-        })
-
         listagemMoedaViewModel.moedaEscolhidaDe.observe(viewLifecycleOwner, Observer {
             configuraMoedaDeSelecionada(it)
         })
@@ -143,9 +128,7 @@ class ConversaoMoedaFragment : Fragment() {
 
     private fun efetuaAhConversaoDoValor() {
         conversaoMoedaViewModel.converte(
-            isOnline = isOnline,
-            siglaDe = formataString(moedaDe?.sigla),
-            siglaPara = formataString(moedaPara?.nome),
+            siglaPara = formataString(moedaPara?.sigla),
             valor = getValorEscolhido()
         )
     }

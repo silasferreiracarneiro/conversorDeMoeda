@@ -18,6 +18,6 @@ class SharedPreferencesManager(context: Context) {
         }
     }
 
-    fun getSeEhParaUsarDadosMoveis() : Boolean =
+    suspend fun getSeEhParaUsarDadosMoveis() : Boolean =
         mPrefs.getBoolean(IS_NETWORK, false)
 }

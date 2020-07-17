@@ -7,6 +7,6 @@ class MainRepository(private val prefs: SharedPreferencesManager) {
     suspend fun salvaSeEhParaUsarDadosMoveis(value: Boolean) =
         prefs.salvaSeEhParaUsarDadosMoveis(value)
 
-    fun buscaUltimoValorSelecionadoNoSwitch() =
+    suspend fun buscaUltimoValorSelecionadoNoSwitch() =
         prefs.getSeEhParaUsarDadosMoveis()
 }

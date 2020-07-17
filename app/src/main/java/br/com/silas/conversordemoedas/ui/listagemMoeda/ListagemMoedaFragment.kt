@@ -27,7 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.snackbar.Snackbar
 
-class ListagemMoedaFragment : BottomSheetDialogFragment(), MoedaSelecionada {
+class ListagemMoedaFragment : BottomSheetDialogFragment() {
 
     companion object {
         fun newInstance(converter: Int) = ListagemMoedaFragment().apply {
@@ -58,9 +58,13 @@ class ListagemMoedaFragment : BottomSheetDialogFragment(), MoedaSelecionada {
         bindProperties(root)
         bindObservable()
         bindBundle()
-        listagemMoedaViewModel.getMoedas()
+        getMoedas()
 
         return root
+    }
+
+    private fun getMoedas() {
+        listagemMoedaViewModel.getMoedas()
     }
 
     private fun bindBundle() {
@@ -138,13 +142,14 @@ class ListagemMoedaFragment : BottomSheetDialogFragment(), MoedaSelecionada {
          recycler.setHasFixedSize(true)
          recycler.layoutManager = LinearLayoutManager(activity)
          recycler.isNestedScrollingEnabled = false
-         recycler.adapter = ListaMoedaAdapter(moedas, this)
-         ((recycler.adapter as ListaMoedaAdapter).notifyDataSetChanged())
-    }
+         recycler.adapter = ListaMoedaAdapter(moedas, object : MoedaSelecionada {
+             override fun clickItem(moeda: Moeda) {
+                 listagemMoedaViewModel.setMoedaSelecionada(moeda, quemConverte)
+                 dismiss()
+             }
+         })
 
-    override fun clickItem(moeda: Moeda) {
-        listagemMoedaViewModel.setMoedaSelecionada(moeda, quemConverte)
-        dismiss()
+         ((recycler.adapter as ListaMoedaAdapter).notifyDataSetChanged())
     }
 }
 

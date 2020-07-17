@@ -10,15 +10,20 @@ class TaxaCambioResponse (
     var terms : String?,
     @SerializedName("privacy")
     var privacy : String?,
-    @SerializedName("currencies")
-    var currencies : Map<String, Double>
+    @SerializedName("source")
+    var source: String?,
+    @SerializedName("quotes")
+    var quotes : Map<String, Double>
 ) {
     fun converteMapParaListaDeTaxaDeCambio(): List<TaxaCambio> {
-        return currencies.map {
-            TaxaCambio(
-                it.key,
-                it.value
-            )
+        if (quotes.isNotEmpty()) {
+            return quotes.map {
+                TaxaCambio(
+                    it.key,
+                    it.value
+                )
+            }
         }
+        return emptyList()
     }
 }
